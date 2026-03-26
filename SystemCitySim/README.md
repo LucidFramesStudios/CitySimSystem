@@ -5,22 +5,7 @@ A system-driven city simulation where autonomous agents make decisions, interact
 
 ---
 
-##  Demo
 
-
-Demo Video => https://www.youtube.com/watch?v=RLmhAbE9Z78
-
-<img width="1067" height="660" src="https://github.com/user-attachments/assets/12d888c2-4991-4552-9f10-00c026d367f7" />
-
-<img width="1064" height="649" src="https://github.com/user-attachments/assets/0c4f0bb7-923e-4e47-b580-fa39aa2d7584" />
-
-<img width="1064" height="646" alt="Screenshot 2026-03-25 190434" src="https://github.com/user-attachments/assets/ba950e32-3d51-48ae-9996-20ded19ad2fa" />
-
-<img width="1915" height="1094" alt="image" src="https://github.com/user-attachments/assets/d3be037f-da16-4d4d-9d12-02e25e934e99" />
-
-
-
----
 
 ##  What This System Demonstrates
 
