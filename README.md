@@ -10,6 +10,8 @@ A system-driven city simulation where autonomous agents make decisions, interact
 
 Demo Video => https://www.youtube.com/watch?v=RLmhAbE9Z78
 
+<img width="2752" height="1534" alt="ArchitectureBreakdown" src="https://github.com/user-attachments/assets/2a223095-7b81-47dd-a2e3-d7dba6a90fa3" />
+
 <img width="1067" height="660" alt="Screenshot 2026-03-25 193737" src="https://github.com/user-attachments/assets/4414b0c4-ba30-465e-9c5b-17e11578ba70" />
 
 <img width="1064" height="646" alt="Screenshot 2026-03-25 190434" src="https://github.com/user-attachments/assets/c21963da-f8fb-48db-9859-34f76099a58e" />
