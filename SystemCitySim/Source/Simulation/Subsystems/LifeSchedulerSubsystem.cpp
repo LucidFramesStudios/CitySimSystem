@@ -28,9 +28,9 @@ void ULifeSchedulerSubsystem::EvaluateAgentSchedule(FAgentData& Agent, float Wor
 
     if (WorldTime >= 6.0f && WorldTime < StartCommuteTime) NextPhase = ELifePhase::WakeUp;
     else if (WorldTime >= StartCommuteTime && WorldTime < StartWorkTime) NextPhase = ELifePhase::CommuteToWork;
-    else if (WorldTime >= StartWorkTime && WorldTime < 13.0f) NextPhase = ELifePhase::Work;
-    else if (WorldTime >= 13.0f && WorldTime < 14.0f) NextPhase = ELifePhase::CoffeeBreak;
-    else if (WorldTime >= 14.0f && WorldTime < 18.0f) NextPhase = ELifePhase::Work;
+    else if (WorldTime >= StartWorkTime && WorldTime < 13.0f + CommuteStagger) NextPhase = ELifePhase::Work;
+    else if (WorldTime >= 13.0f + CommuteStagger && WorldTime < 14.0f + CommuteStagger) NextPhase = ELifePhase::CoffeeBreak;
+    else if (WorldTime >= 14.0f + CommuteStagger && WorldTime < 18.0f) NextPhase = ELifePhase::Work;
     else if (WorldTime >= 18.0f && WorldTime < 19.0f) NextPhase = ELifePhase::CommuteHome;
     else if (WorldTime >= 19.0f && WorldTime < 22.0f) NextPhase = ELifePhase::Relax;
     else NextPhase = ELifePhase::Sleep;

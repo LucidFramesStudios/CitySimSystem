@@ -169,7 +169,7 @@ void UVehicleSimulationSubsystem::ProcessTick(float FixedTickRate)
 
                     if (FVector::DotProduct(Forward, ToAgent) > 0.5f)
                     {
-                        TargetSpeed *= 0.2f;
+                        TargetSpeed = (DistSq < 22500.f) ? 0.f : TargetSpeed * 0.2f;   // hard stop within 150u, else crawl
                         break;
                     }
                 }

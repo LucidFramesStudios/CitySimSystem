@@ -298,6 +298,8 @@ void USimAISubsystem::MakeDecision(FAgentData& Agent, float WorldTime)
 
                 int32 StartNode = RoadPath->GetNearestNode(Agent.LogicalLocation);
                 int32 TargetNode = RoadPath->GetNearestNode(Agent.TargetLocation);
+                Agent.ActiveInteractableID = -1;   // don't re-fail a reserve against a stale target while wandering
+                Agent.DesiredTargetID = -1;
                 PathSub->RequestPath(Agent.AgentID, StartNode, TargetNode);
                 return;
             }
@@ -482,6 +484,35 @@ void USimAISubsystem::ExecuteMovement(FAgentData& Agent, float DeltaTime, const 
     }
 
     
+    // --- avoidance: outside agents sidestep nearby agents (no overlap) and cars (no clip) ---
+    if (!Agent.bInsideBuilding)
+    {
+        FVector Avoid = FVector::ZeroVector;
+        const float SepRadius = 110.f;
+        const float SepRadiusSq = SepRadius * SepRadius;
+        for (const FAgentData& Other : AllAgents)
+        {
+            if (Other.AgentID == Agent.AgentID || Other.bInsideBuilding) continue;
+            FVector Away = Agent.LogicalLocation - Other.LogicalLocation; Away.Z = 0.f;
+            const float D2 = Away.SizeSquared();
+            if (D2 > 1.f && D2 < SepRadiusSq)
+                Avoid += Away.GetSafeNormal() * (1.f - FMath::Sqrt(D2) / SepRadius);
+        }
+        if (UVehicleSimulationSubsystem* VehSub = GetWorld()->GetSubsystem<UVehicleSimulationSubsystem>())
+        {
+            const float CarRadius = 220.f;
+            const float CarRadiusSq = CarRadius * CarRadius;
+            for (const FVehicleData& V : VehSub->GetActiveVehicles())
+            {
+                FVector Away = Agent.LogicalLocation - V.LogicalLocation; Away.Z = 0.f;
+                const float D2 = Away.SizeSquared();
+                if (D2 > 1.f && D2 < CarRadiusSq)
+                    Avoid += Away.GetSafeNormal() * (2.f - FMath::Sqrt(D2) / CarRadius) * 2.f;   // cars weigh more
+            }
+        }
+        DesiredVelocity += Avoid.GetClampedToMaxSize(1.5f) * MaxSpeed;
+    }
+
     FVector Steering = DesiredVelocity - Agent.SimVelocity;
     Steering = Steering.GetClampedToMaxSize(150.f);
     Agent.SimVelocity += Steering * DeltaTime;

@@ -130,7 +130,7 @@ void UInteractionSubsystem::ResolveTimerCompletion(FAgentData& Agent)
         ReleaseSlot(Agent.ActiveInteractableID, Agent.AgentID);
 
         
-        Agent.FailedTargets.Add(Agent.ActiveInteractableID);
+        Agent.FailedTargets.Empty();   // reset the blacklist on a successful interaction (don't blacklist the venue we just used)
     }
 
     Agent.bInsideBuilding = false;
@@ -342,6 +342,21 @@ int32 UInteractionSubsystem::FindBestObjectForGoal(FGameplayTag Goal, const FVec
         {
             BestScore = Score;
             BestID = Obj->ObjectID;  
+        }
+    }
+
+    if (BestID == -1)
+    {
+        // Blacklist saturated (e.g. the synchronized coffee rush): fall back to the
+        // nearest matching object IGNORING FailedTargets, so the agent still walks to
+        // a venue and waits instead of dropping into the wandering failsafe.
+        float FallbackDistSq = MAX_FLT;
+        for (const FSmartObjectEntry& Entry : SmartObjects)
+        {
+            USmartObjectComponent* Obj = Entry.Component;
+            if (!Obj || Obj->ObjectType != Goal) continue;
+            const float D = FVector::DistSquared(AgentLocation, Entry.Location);
+            if (D < FallbackDistSq) { FallbackDistSq = D; BestID = Obj->ObjectID; }
         }
     }
     return BestID;

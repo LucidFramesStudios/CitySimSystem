@@ -85,21 +85,9 @@ void AVisualAgentActor::SyncToSimulation(float DeltaTime)
 
     if (Agent->bInsideBuilding)
     {
+        // Seated at its reserved slot: render at the logical (slot) position and stop
+        // moving, instead of scattering the agent up to 4.5m around the building.
         SimVelocity = FVector::ZeroVector;
-        UInteractionSubsystem* IntSub = GetWorld()->GetSubsystem<UInteractionSubsystem>();
-
-        if (IntSub && Agent->ActiveInteractableID != -1)
-        {
-            FVector InsideOrigin = IntSub->GetInsideLocation(Agent->ActiveInteractableID);
-
-            
-            float GoldenAngle = 137.5f;
-            float Angle = Agent->AgentID * GoldenAngle;
-            float Radius = 50.f + (Agent->AgentID % 400);
-
-            FVector Offset(FMath::Cos(FMath::DegreesToRadians(Angle)) * Radius, FMath::Sin(FMath::DegreesToRadians(Angle)) * Radius, 10.f);
-            TargetLoc = InsideOrigin + Offset;
-        }
     }
 
     TargetLoc.Z = 0.0f;

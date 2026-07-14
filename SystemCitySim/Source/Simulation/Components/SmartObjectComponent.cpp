@@ -101,11 +101,12 @@ void USmartObjectComponent::InitializeSlots()
     
     else if (ObjectType == FGameplayTag::RequestGameplayTag("Type.Cafe"))
     {
-        const int32 SeatCount = 6;
+        const int32 SeatCount = 20;
         for (int32 i = 0; i < SeatCount; i++)
         {
             float Angle = i * PI * 2.f / SeatCount;
-            FVector Offset(FMath::Cos(Angle) * 120.f, FMath::Sin(Angle) * 120.f, 0.f);
+            float Radius = 150.f + (i % 4) * 90.f;   // a few concentric rings so seats don't overlap
+            FVector Offset(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.f);
 
             FInteractionSlot Slot;
             Slot.Location = Base + Offset;

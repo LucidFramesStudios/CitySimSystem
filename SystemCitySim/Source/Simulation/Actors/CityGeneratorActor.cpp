@@ -269,10 +269,11 @@ void ACityGeneratorActor::GenerateHubs()
         LeisureHub.Location = GetActorLocation() + FVector(FMath::Cos(Angle) * Dist, FMath::Sin(Angle) * Dist, 0.f); 
         LeisureHub.Radius = SimRandomStream.FRandRange(2000.f, 4000.f); 
 
-        float Roll = SimRandomStream.FRand(); 
-        if (Roll < 0.4f) LeisureHub.DominantZone = FSimTags::Type_Park; 
-        else if (Roll < 0.8f) LeisureHub.DominantZone = FSimTags::Type_Cafe; 
-        else LeisureHub.DominantZone = FSimTags::Type_Shop; 
+        float Roll = SimRandomStream.FRand();
+        if (i == 0) LeisureHub.DominantZone = FSimTags::Type_Cafe;   // guarantee at least one cafe hub (roll still consumed for determinism)
+        else if (Roll < 0.4f) LeisureHub.DominantZone = FSimTags::Type_Park;
+        else if (Roll < 0.8f) LeisureHub.DominantZone = FSimTags::Type_Cafe;
+        else LeisureHub.DominantZone = FSimTags::Type_Shop;
 
         LeisureHub.DensityMultiplier = 1.0f; 
         LeisureHub.HeightMultiplier = 0.8f; 
